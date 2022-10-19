@@ -19,3 +19,7 @@ class Post(models.Model):
         return super().save(*args, **kwargs)
     def __str__(self):
         return self.title
+
+    @property
+    def like_count(self):
+        return self.liked.all().count()

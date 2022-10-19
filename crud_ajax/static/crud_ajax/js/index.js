@@ -1,8 +1,55 @@
-const postsBox = document.getElementById('posts-box')
+const postsBox = document.getElementById('posts-box')//get the postbox element using id
 const spinnerBox = document.getElementById('spinner-box')
 const loadBtn = document.getElementById('load-btn')
 const endBtn = document.getElementById('end-box')
-let visible = 3
+// a function for getting csrf token. From docs
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          // Does this cookie string begin with the name we want?
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+          }
+      }
+  }
+  return cookieValue;
+}
+const csrftoken = getCookie('csrftoken');
+// end of csrf token
+
+// function for like and unlike
+const likeUnlikePosts = () => {
+  const likeUnlikeForms = [...document.getElementsByClassName('like-unlike-forms')]//append like unlike form in list using spread 
+  console.log(likeUnlikeForms)
+  // add a event listerner on like - unlike button submit
+  likeUnlikeForms.forEach(form=> form.addEventListener('submit', e=>{
+    e.preventDefault()// prevents from reloading the page
+    const clickedId= e.target.getAttribute('data-form-id')//get the custom html attribute
+    const clickedBtn = document.getElementById(`like-unlike-${clickedId}`)//get like-unlike button with uniquer post id
+    $.ajax({
+      type:'POST',
+      url:"/like-unlike/",
+      data: {
+        'csrfmiddlewaretoken':csrftoken,
+        'pk':clickedId,
+
+      },
+      success: function(response){
+        console.log(response)
+        //logic for displaying like and unlike button when clicked without reloading the page
+        clickedBtn.textContent = response.liked ? `Unlike (${response.like_count})` :`Like(${response.like_count})`
+      },
+      error: function(error){
+        console.log(error)
+      }
+    })
+  }))
+}
+let visible = 3 // visible number of post to the user
 const getData = () => {
   $.ajax({
     type:'GET',
@@ -22,7 +69,10 @@ const getData = () => {
             <div class="card-body">
               <p class="card-text">${el.body}</p>
               <a href="#" class="btn btn-outline-secondary">Detail</a>
-              <a href="#" class="btn btn-outline-primary">Like</a>
+              <form class='like-unlike-forms' data-form-id=${el.id}>
+
+              <button class="btn btn-outline-primary" id="like-unlike-${el.id}">${el.liked ? `Unlike (${el.like_count})` :`Like(${el.like_count})`}</button>
+              </form>
             </div>
             <div class="card-footer text-muted">
               ${el.created}
@@ -30,6 +80,7 @@ const getData = () => {
           </div>
             `
         });
+        likeUnlikePosts()// calling likeunline function
       }, 100)
       console.log(response.size)
       if (response.size === 0){
@@ -45,7 +96,7 @@ const getData = () => {
     }
   });
 }
-
+// load more logic
 getData()
 loadBtn.addEventListener('click', ()=>{
   spinnerBox.classList.remove('not-visible')
