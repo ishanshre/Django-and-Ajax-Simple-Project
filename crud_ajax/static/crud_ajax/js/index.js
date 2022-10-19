@@ -2,6 +2,11 @@ const postsBox = document.getElementById('posts-box')//get the postbox element u
 const spinnerBox = document.getElementById('spinner-box')
 const loadBtn = document.getElementById('load-btn')
 const endBtn = document.getElementById('end-box')
+const postForm = document.getElementById('post-form')
+const postTitle = document.getElementById('id_title')
+const postBody = document.getElementById('id_body')
+const postCsrf = document.getElementsByName('csrfmiddlewaretoken')
+console.log(postCsrf, postCsrf[0].value)
 // a function for getting csrf token. From docs
 function getCookie(name) {
   let cookieValue = null;
@@ -97,10 +102,56 @@ const getData = () => {
   });
 }
 // load more logic
-getData()
+
 loadBtn.addEventListener('click', ()=>{
   spinnerBox.classList.remove('not-visible')
   visible += 3
   getData()
 })
+
+postForm.addEventListener('submit', e=>{
+  e.preventDefault()
+  $.ajax({
+    type:'POST',
+    url:'',
+    data: {
+      'csrfmiddlewaretoken':postCsrf[0].value,
+      'title':postTitle.value,
+      'body':postBody.value,
+    },
+    success: function(response){
+      postsBox.insertAdjacentHTML('afterbegin', `
+      <div class="card mt-3">
+      <div class="card-header">
+        ${response.title}
+      </div>
+      <div class="card-body">
+        <p class="card-text">${response.body}</p>
+        <a href="#" class="btn btn-outline-secondary">Detail</a>
+        <form class='like-unlike-forms' data-form-id=${response.id}>
+
+        <button class="btn btn-outline-primary" id="like-unlike-${response.id}">Like</button>
+        </form>
+      </div>
+      <div class="card-footer text-muted">
+        ${response.created}
+      </div>
+    </div>
+      `)
+      
+      likeUnlikePosts()
+      postForm.reset()
+      $('#addPostModal').modal('hide');
+      handleAlerts('success','New Post Added')
+     
+      
+    },
+    error: function(error){
+      console.log(error);
+      handleAlerts('danger', 'No Post added')
+    }
+  });
+});
+
+getData()
 
