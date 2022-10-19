@@ -1,0 +1,1 @@
+# A simple CRUD django and ajax project
