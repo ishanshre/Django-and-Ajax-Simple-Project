@@ -6,17 +6,20 @@
 
 <div class="container">
     <h1>CRUD using django and ajax</h1>
-    <div id="spinner-box">
-        <div class="spinner-border">
-            
-        </div>
-    </div>
     <h3>List of Post</h3>
     <div id="posts-box">
 
     </div>
     <div class="text-center mb-3" id="end-box">
-        <button class="btn btn-primary" id="load-btn">Load More</button>
+        <button class="btn btn-primary mt-3" id="load-btn">
+            <span id="spinner-box"><span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span></span>
+            Load More</button>
+        <!-- <div id="spinner-box">
+            <div class="spinner-border">
+                
+            </div> -->
+        </div>
+        
     </div>
 </div>
 {% endblock %}
