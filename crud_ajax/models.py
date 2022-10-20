@@ -4,6 +4,7 @@ from accounts.models import Profile
 from django.utils.text import slugify
 from django_extensions.db.fields import AutoSlugField
 from django.utils.translation import gettext as _
+from django.urls import reverse
 
 class Post(models.Model):
     title = models.CharField(max_length=200)
@@ -20,6 +21,11 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
+    def get_absolute_url(self):
+        return reverse('crud_ajax:post_detail', args=[self.slug])
+
     @property
     def like_count(self):
         return self.liked.all().count()
+    
+    

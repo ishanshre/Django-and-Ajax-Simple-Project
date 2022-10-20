@@ -7,6 +7,7 @@ const postTitle = document.getElementById('id_title')
 const postBody = document.getElementById('id_body')
 const postCsrf = document.getElementsByName('csrfmiddlewaretoken')
 console.log(postCsrf, postCsrf[0].value)
+const url = window.location.href
 // a function for getting csrf token. From docs
 function getCookie(name) {
   let cookieValue = null;
@@ -73,7 +74,7 @@ const getData = () => {
             </div>
             <div class="card-body">
               <p class="card-text">${el.body}</p>
-              <a href="#" class="btn btn-outline-secondary">Detail</a>
+              <a href="${url}post/${el.slug}" class="btn btn-outline-secondary">Detail</a>
               <form class='like-unlike-forms' data-form-id=${el.id}>
 
               <button class="btn btn-outline-primary" id="like-unlike-${el.id}">${el.liked ? `Unlike (${el.like_count})` :`Like(${el.like_count})`}</button>

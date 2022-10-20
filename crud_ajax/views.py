@@ -4,6 +4,7 @@ from .models import Post
 from django.http import JsonResponse
 from .forms import PostForm
 from accounts.models import Profile
+
 # Create your views here.
 
 def is_ajax(request):
@@ -77,3 +78,15 @@ def likeUnlikePostView(request):
             liked = True
             obj.liked.add(request.user)
         return JsonResponse({'liked':liked, 'like_count':obj.like_count})
+
+
+class PostDetailView(View):
+    template_name = 'post/post-detail.html'
+    def get(self, request, slug):
+        post = Post.objects.get(slug=slug)
+        form = PostForm()
+        context = {
+            'post':post,
+            'form':form,
+        }
+        return render(request, self.template_name, context)
