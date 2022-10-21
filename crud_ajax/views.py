@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from .forms import PostForm
 from accounts.models import Profile
 from datetime import datetime
+from django.utils.timesince import timesince
 # Create your views here.
 
 def is_ajax(request):
@@ -62,7 +63,7 @@ def load_post_data_view(request, **kwargs):
                 'author':obj.author.user.username,
                 'liked': True if request.user in obj.liked.all() else False,
                 'like_count':obj.like_count,
-                'created':obj.created.ctime(),
+                'created':timesince(obj.created),
                 'updated':obj.updated
             }
             data.append(item)
@@ -78,7 +79,7 @@ def load_post_detail_data_view(request, **kwargs):
         'title':post.title,
         'slug':post.slug,
         'body':post.body,
-        'created':post.created.ctime(),
+        'created':timesince(post.created),
         'updated':post.updated.ctime(),
         'author':post.author.user.username,
         'logged_in':request.user.username

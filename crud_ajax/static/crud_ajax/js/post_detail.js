@@ -45,7 +45,7 @@ $.ajax({
         postBody.value = data.body;
     },
     error: function (error){
-        consosle.log(error);
+        console.log(error);
     }
 });
 
