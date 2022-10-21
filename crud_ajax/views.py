@@ -4,12 +4,13 @@ from .models import Post
 from django.http import JsonResponse
 from .forms import PostForm
 from accounts.models import Profile
-
+from datetime import datetime
 # Create your views here.
 
 def is_ajax(request):
     return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
 
+    
 class IndexView(View):
     template_name = 'index.html'
     def get(self, request):
@@ -41,6 +42,7 @@ class IndexView(View):
         }
         return render(request, self.template_name, context)
 
+
 def load_post_data_view(request, **kwargs):
     if is_ajax(request):
         num_posts = kwargs.get('num_posts')
@@ -60,13 +62,29 @@ def load_post_data_view(request, **kwargs):
                 'author':obj.author.user.username,
                 'liked': True if request.user in obj.liked.all() else False,
                 'like_count':obj.like_count,
-                'created':obj.created,
+                'created':obj.created.ctime(),
                 'updated':obj.updated
             }
             data.append(item)
+            
         return JsonResponse({'data':data[lower:upper], 'size':size})
-    
 
+
+def load_post_detail_data_view(request, **kwargs):
+    slug = kwargs.get('slug')
+    post = Post.objects.get(slug=slug)
+    data = {
+        'id':post.id,
+        'title':post.title,
+        'slug':post.slug,
+        'body':post.body,
+        'created':post.created.ctime(),
+        'updated':post.updated.ctime(),
+        'author':post.author.user.username,
+        'logged_in':request.user.username
+    } 
+    return JsonResponse({'data':data})
+    
 def likeUnlikePostView(request):
     if is_ajax(request):
         pk = request.POST.get('pk')
@@ -90,3 +108,24 @@ class PostDetailView(View):
             'form':form,
         }
         return render(request, self.template_name, context)
+
+def post_detail_udpate(request, **kwargs):
+    slug = kwargs.get('slug')
+    post = Post.objects.get(slug=slug)
+    if is_ajax(request):
+        new_title = request.POST.get('title')
+        new_body = request.POST.get('body')
+        post.title = new_title
+        post.body = new_body
+        post.save()
+        return JsonResponse({
+            'title':new_title,
+            'body':new_body
+        })
+
+def post_detail_delete(request, **kwargs):
+    slug = kwargs.get('slug')
+    post = Post.objects.get(slug=slug)
+    if is_ajax(request):
+        post.delete()
+        return JsonResponse({})

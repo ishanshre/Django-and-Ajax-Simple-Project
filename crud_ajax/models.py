@@ -5,11 +5,11 @@ from django.utils.text import slugify
 from django_extensions.db.fields import AutoSlugField
 from django.utils.translation import gettext as _
 from django.urls import reverse
-
+from ckeditor.fields import RichTextField
 class Post(models.Model):
     title = models.CharField(max_length=200)
     slug = AutoSlugField(_('slug'),populate_from=('title','author__user__username'), unique=True)
-    body = models.TextField(max_length=5000)
+    body = RichTextField(max_length=5000)
     liked = models.ManyToManyField(User, blank=True)
     author = models.ForeignKey(Profile, on_delete=models.CASCADE)
     updated = models.DateTimeField(auto_now=True)
