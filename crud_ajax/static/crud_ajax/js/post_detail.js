@@ -73,3 +73,22 @@ formUpdate.addEventListener('submit', e=>{
     })
 })
 
+formDelete.addEventListener('submit', e=>{
+    e.preventDefault();
+    $.ajax({
+        type:'POST',
+        url:urlDelete,
+        data: {
+            'csrfmiddlewaretoken':postUpdateCsrf[0].value,
+        },
+        success: function(response){
+            //window.location.orgin is the home page of this website for redircting after deleting the object
+            window.location.href = window.location.origin
+            //storing the title of deleted object in localstorage to display title in delete message
+            localStorage.setItem('title', postTitle.value);
+        },
+        error: function(response){
+            console.log(response);
+        }
+    })
+});

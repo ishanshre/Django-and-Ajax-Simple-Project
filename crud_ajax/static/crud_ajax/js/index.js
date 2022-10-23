@@ -28,6 +28,16 @@ function getCookie(name) {
 const csrftoken = getCookie('csrftoken');
 // end of csrf token
 
+// displaying flash message for delete item 
+const deleted = localStorage.getItem('title');
+if (deleted){
+    console.log(deleted)
+    // displaying success message on deletion
+    handleAlerts('danger',`Post "${deleted}" successfully`)
+    // clearing the localStorage after displaying the message
+    localStorage.clear()
+}
+
 // function for like and unlike
 const likeUnlikePosts = () => {
   const likeUnlikeForms = [...document.getElementsByClassName('like-unlike-forms')]//append like unlike form in list using spread 
