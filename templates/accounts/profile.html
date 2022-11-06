@@ -1,0 +1,33 @@
+{% extends 'base/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %}{{ request.user.username|title }}'s Profile{% endblock %}
+{% block css %}{% endblock %}
+{% block body %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <img src="{{ request.user.user_profile.avatar.url }}" alt="Profile" srcset="">
+            <h3>Name: {{ request.user.first_name }} {{ request.user.last_name }}</h3>
+            <h3>Username: {{ request.user.username }}</h3>
+            <h3>Email: {{ request.user.email }}</h3>
+        </div>
+        <div class="col-md-8">
+            <h1>Update Info</h1>
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ user_form|crispy }}
+                {{ profile_form|crispy }}
+                <input type="submit" value="Update" class="btn btn-outline-warning">
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+{% load static %}
+    <script src="{% static 'crud_ajax/js/index.js' %}" defer></script>
+{% endblock %}
