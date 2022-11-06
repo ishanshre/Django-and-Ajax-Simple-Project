@@ -133,6 +133,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+#login redirects
+LOGIN_URL = 'accounts:login'
+LOGIN_REDIRECT_URL = 'crud_ajax:index'
+LOGOUT_REDIRECT_URL = 'accounts:login'
+
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 CRISPY_TEMPLATE_PACK = 'bootstrap5'

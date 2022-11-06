@@ -1,0 +1,22 @@
+{% extends 'base/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %}Register{% endblock %}
+{% block css %}{% endblock %}
+{% block body %}
+
+<div class="container">
+    <h1>Register User</h1>
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ register_form|crispy }}
+        <input type="submit" value="Register" class="btn btn-secondary">
+    </form>
+</div>
+
+{% endblock %}
+
+{% block script %}
+{% load static %}
+    <script src="{% static 'crud_ajax/js/index.js' %}" defer></script>
+{% endblock %}

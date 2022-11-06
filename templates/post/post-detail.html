@@ -65,8 +65,8 @@
 <div class="container w-75">
     <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
-            {% for image in post.get_photos %}
-          <div class="carousel-item active">
+            {% for image in post.get_photos %}            
+          <div class="carousel-item {% if forloop.counter == 1%}active{% endif %}">
             <img src="{{ image.image.url }}" class="d-block w-100" alt="{{ image.caption }}">
           </div>
           {% endfor %}
