@@ -1,11 +1,15 @@
-from django.shortcuts import render
-from django.views import View, generic
-from .models import Post
-from django.http import JsonResponse
-from .forms import PostForm
-from accounts.models import Profile
 from datetime import datetime
+
+from django.http import JsonResponse
+from django.shortcuts import render, get_object_or_404
 from django.utils.timesince import timesince
+from django.views import View, generic
+
+from accounts.models import Profile
+
+from .forms import PostForm
+from .models import Post
+
 # Create your views here.
 
 def is_ajax(request):
@@ -102,7 +106,7 @@ def likeUnlikePostView(request):
 class PostDetailView(View):
     template_name = 'post/post-detail.html'
     def get(self, request, slug):
-        post = Post.objects.get(slug=slug)
+        post = get_object_or_404(Post, slug=slug)
         form = PostForm()
         context = {
             'post':post,
