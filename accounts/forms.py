@@ -22,6 +22,7 @@ class ProfileForm(forms.ModelForm):
         fields = ['avatar','bio']
 
 class CustomUserChangeForm(UserChangeForm):
+    password = None
     class Meta:
         model = User
         fields = ['first_name', 'last_name','username','email']
